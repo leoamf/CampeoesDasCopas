@@ -7,6 +7,30 @@
 //
 
 import UIKit
+extension WorldCupViewController: UITableViewDataSource, UITableViewDelegate {
+    func numberOfSections(in tableView: UITableView) -> Int {
+         return worldCup.matches.count
+    }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        let games = worldCup.matches[section].games
+        return games.count
+    }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        // recuperando o Game que se encontra em algum Match (oitavas de final, quartas, semi...)
+        let match = worldCup.matches[indexPath.section]
+        let game = match.games[indexPath.row]
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! GamesTableViewCell
+        cell.prepare(with: game)
+        
+        return cell
+    }
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        let match = worldCup.matches[section]
+        return match.stage
+    }
+    
+}
 
 class WorldCupViewController: UIViewController {
 
@@ -21,6 +45,7 @@ class WorldCupViewController: UIViewController {
     @IBOutlet weak var lbWinner: UILabel!
     @IBOutlet weak var lbVice: UILabel!
     
+    @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,6 +54,7 @@ class WorldCupViewController: UIViewController {
         lbScore.text = "\(worldCup.winnerScore) x \(worldCup.viceScore)"
         lbWinner.text = worldCup.winner
         lbVice.text = worldCup.vice
+    
         // Do any additional setup after loading the view.
     }
 
